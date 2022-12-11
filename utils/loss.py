@@ -739,7 +739,10 @@ class ComputeLossOTA:
                 + 3.0 * pair_wise_iou_loss
             )
 
-            matching_matrix = torch.zeros_like(cost)
+            # https://github.com/WongKinYiu/yolov7/issues/1101
+            # Adds device="cpu" in order to avoid device mismatch when training 
+            # P6 models like e6 or w6 or x
+            matching_matrix = torch.zeros_like(cost, device="cpu")
 
             for gt_idx in range(num_gt):
                 _, pos_idx = torch.topk(
